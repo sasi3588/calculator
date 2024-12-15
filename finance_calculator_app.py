@@ -10,13 +10,14 @@ def calculate_interest(start_date, end_date, amount, interest_rate):
     full_months_interest = amount * (interest_rate / 100) * months_diff
 
     start_of_last_month = start_date.replace(year=end_date.year, month=end_date.month)
-    remaining_days = (end_date - start_of_last_month).days
+    remaining_days = (end_date - start_of_last_month).days+months_diff
 
     amount_per_month = amount * (interest_rate / 100)
-    partial_month_interest = amount_per_month * ((remaining_days + months_diff) / 30)
+    partial_month_interest = amount_per_month * (remaining_days/ 30)
 
     total_interest = round(full_months_interest + partial_month_interest, 2)
-    return total_interest
+    
+    return months_diff, full_months_interest, remaining_days, total_interest
 
 # Streamlit App
 st.set_page_config(page_title="Finance Calculator", page_icon="\U0001F4B0", layout="centered")
@@ -61,12 +62,20 @@ if st.sidebar.button("Calculate Interest"):
     if start_date >= end_date:
         st.error("Start Date must be before End Date.")
     else:
-        total_interest = calculate_interest(start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'), amount, interest_rate)
+        months_diff, full_months_interest, remaining_days, total_interest = calculate_interest(
+            start_date.strftime('%Y-%m-%d'), 
+            end_date.strftime('%Y-%m-%d'), 
+            amount, 
+            interest_rate
+        )
         # Display results
         st.markdown(
             f"""
             <div style="text-align: center; margin-top: 30px;">
                 <h2 style="color: #008000;">Calculation Results</h2>
+                <p style="font-size: 20px;">Number of Months: <strong style="color: #FF4500;">{months_diff}</strong></p>
+                <p style="font-size: 20px;">Interest for Full Months: <strong style="color: #FF4500;">₹{full_months_interest:.2f}</strong></p>
+                <p style="font-size: 20px;">Remaining Days: <strong style="color: #FF4500;">{remaining_days}</strong></p>
                 <p style="font-size: 20px;">Total Interest: <strong style="color: #FF4500;">₹{total_interest}</strong></p>
             </div>
             """,
