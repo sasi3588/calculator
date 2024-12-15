@@ -17,7 +17,7 @@ def calculate_interest(start_date, end_date, amount, interest_rate):
 
     total_interest = round(full_months_interest + partial_month_interest, 2)
     
-    return months_diff, full_months_interest, remaining_days, total_interest
+    return months_diff, full_months_interest, remaining_days,partial_month_interest ,total_interest
 
 # Streamlit App
 st.set_page_config(page_title="Finance Calculator", page_icon="\U0001F4B0", layout="centered")
@@ -70,7 +70,7 @@ if st.button("Calculate Interest"):
         if datetime.strptime(start_date, "%d/%m/%Y") >= datetime.strptime(end_date, "%d/%m/%Y"):
             st.error("Start Date must be before End Date.")
         else:
-            months_diff, full_months_interest, remaining_days, total_interest = calculate_interest(
+            months_diff, full_months_interest, remaining_days, partial_month_interest,total_interest = calculate_interest(
                 start_date, 
                 end_date, 
                 amount, 
@@ -84,6 +84,7 @@ if st.button("Calculate Interest"):
                     <p style="font-size: 18px;">Number of Months: <strong style="color: #FF4500;">{months_diff}</strong></p>
                     <p style="font-size: 18px;">Interest for Full Months: <strong style="color: #FF4500;">₹{full_months_interest:.2f}</strong></p>
                     <p style="font-size: 18px;">Remaining Days: <strong style="color: #FF4500;">{remaining_days}</strong></p>
+                    <p style="font-size: 18px;">Remaining Days Interest : <strong style="color: #FF4500;">{partial_month_interest}</strong></p>
                     <p style="font-size: 18px;">Total Interest: <strong style="color: #FF4500;">₹{total_interest}</strong></p>
                 </div>
                 """,
