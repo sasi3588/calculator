@@ -13,7 +13,7 @@ def calculate_interest(start_date, end_date, amount, interest_rate):
     remaining_days = (end_date - start_of_last_month).days+months_diff
 
     amount_per_month = amount * (interest_rate / 100)
-    partial_month_interest = amount_per_month * (remaining_days/ 30)
+    partial_month_interest = amount_per_month * (remaining_days / 30)
 
     total_interest = round(full_months_interest + partial_month_interest, 2)
     
@@ -27,20 +27,30 @@ st.markdown(
     """
     <style>
         .main-header {
-            font-size: 40px;
+            font-size: 35px;
             font-weight: bold;
             text-align: center;
             color: #FFD700;
             font-family: 'Arial', sans-serif;
+            margin-top: 10px;
         }
         .sub-header {
-            font-size: 20px;
+            font-size: 18px;
             text-align: center;
             color: #555;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
         .stApp {
             background-color: #FFF8DC;
+        }
+        .date-input .stDateInput label {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .date-input .stDateInput input {
+            border: 1px solid #FFD700;
+            padding: 10px;
+            border-radius: 5px;
         }
     </style>
     <div class="main-header">Finance Calculator</div>
@@ -52,10 +62,20 @@ st.markdown(
 # Input Section
 st.sidebar.header("Enter Details")
 
-start_date = st.sidebar.date_input("Start Date", value=datetime(2024, 1, 1))
-end_date = st.sidebar.date_input("End Date", value=datetime(2024, 12, 31))
-amount = st.sidebar.number_input("Principal Amount (₹)", value=20000, min_value=0, step=1000)
-interest_rate = st.sidebar.number_input("Monthly Interest Rate (%)", value=1.75, min_value=0.0, step=0.01)
+start_date = st.sidebar.date_input(
+    "Start Date", value=datetime(2024, 1, 1),
+    key="start_date"
+)
+end_date = st.sidebar.date_input(
+    "End Date", value=datetime(2024, 12, 31),
+    key="end_date"
+)
+amount = st.sidebar.number_input(
+    "Principal Amount (₹)", value=20000, min_value=0, step=1000
+)
+interest_rate = st.sidebar.number_input(
+    "Monthly Interest Rate (%)", value=1.75, min_value=0.0, step=0.01
+)
 
 # Calculate Button
 if st.sidebar.button("Calculate Interest"):
@@ -71,12 +91,12 @@ if st.sidebar.button("Calculate Interest"):
         # Display results
         st.markdown(
             f"""
-            <div style="text-align: center; margin-top: 30px;">
+            <div style="text-align: center; margin-top: 20px;">
                 <h2 style="color: #008000;">Calculation Results</h2>
-                <p style="font-size: 20px;">Number of Months: <strong style="color: #FF4500;">{months_diff}</strong></p>
-                <p style="font-size: 20px;">Interest for Full Months: <strong style="color: #FF4500;">₹{full_months_interest:.2f}</strong></p>
-                <p style="font-size: 20px;">Remaining Days: <strong style="color: #FF4500;">{remaining_days}</strong></p>
-                <p style="font-size: 20px;">Total Interest: <strong style="color: #FF4500;">₹{total_interest}</strong></p>
+                <p style="font-size: 18px;">Number of Months: <strong style="color: #FF4500;">{months_diff}</strong></p>
+                <p style="font-size: 18px;">Interest for Full Months: <strong style="color: #FF4500;">₹{full_months_interest:.2f}</strong></p>
+                <p style="font-size: 18px;">Remaining Days: <strong style="color: #FF4500;">{remaining_days}</strong></p>
+                <p style="font-size: 18px;">Total Interest: <strong style="color: #FF4500;">₹{total_interest}</strong></p>
             </div>
             """,
             unsafe_allow_html=True
