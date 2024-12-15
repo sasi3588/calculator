@@ -10,10 +10,10 @@ def calculate_interest(start_date, end_date, amount, interest_rate):
     full_months_interest = amount * (interest_rate / 100) * months_diff
 
     start_of_last_month = start_date.replace(year=end_date.year, month=end_date.month)
-    remaining_days = (end_date - start_of_last_month).days
+    remaining_days = (end_date - start_of_last_month).days+months_diff
 
     amount_per_month = amount * (interest_rate / 100)
-    partial_month_interest = amount_per_month * ((remaining_days + months_diff) / 30)
+    partial_month_interest = amount_per_month * (remaining_days / 30)
 
     total_interest = round(full_months_interest + partial_month_interest, 2)
     
