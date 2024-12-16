@@ -255,7 +255,7 @@ if calculate_button:
             
             results = [
                 ("Number of Full Years", f"{years_diff}"),
-                ("Interest for Full Years", f"{years_interest}"),
+                ("Interest for Full Years", f"{years_interest:.2f}"),
                 ("Number of Remaining Months", f"{rem_months}"),
                 ("Interest for Remaining Months", f"₹{rem_months_interest:.2f}"),
                 ("Number of Remaining Days", f"{rem_days}"),
