@@ -1,3 +1,4 @@
+#vo code
 import streamlit as st
 from datetime import datetime, timedelta
 
@@ -9,7 +10,7 @@ def calculate_interest(start_date, end_date, amount, interest_rate):
     
     total_interest = 0.0
     principal = amount
-
+    years_interest=0.0
     # Calculate the total number of full years and the remaining period
     years_diff = end_date.year - start_date.year
     remaining_end_date = start_date.replace(year=start_date.year + years_diff)
@@ -28,7 +29,8 @@ def calculate_interest(start_date, end_date, amount, interest_rate):
         yearly_interest = principal * (interest_rate / 100) * 12  # 12 months
         total_interest += yearly_interest
         principal += yearly_interest  # Compound the interest into the principal
-    
+	
+    years_interest=total_interest
     # Calculate interest for the remaining months/days
     remaining_months = (end_date.year - remaining_end_date.year) * 12 + end_date.month - remaining_end_date.month
     start_of_last_month = remaining_end_date.replace(day=1, month=end_date.month)
@@ -47,7 +49,7 @@ def calculate_interest(start_date, end_date, amount, interest_rate):
     remaining_days_interest = round(amount_per_month * (remaining_days / 30), 2)
     total_interest += remaining_days_interest
 
-    return years_diff, total_interest, remaining_months, remaining_days, remaining_months_interest, remaining_days_interest
+    return years_diff, total_interest, remaining_months, remaining_days, remaining_months_interest, remaining_days_interest,years_interest
 
 # Streamlit App Configuration
 st.set_page_config(page_title="Finance Calculator", page_icon="💰", layout="wide")
@@ -240,7 +242,7 @@ if calculate_button:
         if datetime.strptime(start_date, "%d/%m/%Y") >= datetime.strptime(end_date, "%d/%m/%Y"):
             st.error("Start Date must be before End Date.")
         else:
-            years_diff, total_interest, rem_months, rem_days, rem_months_interest, rem_days_interest = calculate_interest(
+            years_diff, total_interest, rem_months, rem_days, rem_months_interest, rem_days_interest,years_interest = calculate_interest(
                 start_date, 
                 end_date, 
                 amount, 
@@ -253,6 +255,7 @@ if calculate_button:
             
             results = [
                 ("Number of Full Years", f"{years_diff}"),
+                ("Interest for Full Years", f"{years_interest:.2f}"),
                 ("Number of Remaining Months", f"{rem_months}"),
                 ("Interest for Remaining Months", f"₹{rem_months_interest:.2f}"),
                 ("Number of Remaining Days", f"{rem_days}"),
