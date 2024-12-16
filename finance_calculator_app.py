@@ -123,7 +123,9 @@ if st.button("Calculate Interest"):
                 <div style="text-align: center; margin-top: 20px; color: {'#FFF' if mode == 'Dark' else '#000'};">
                     <h2 style="color: #008000;">Calculation Results</h2>
                     <p style="font-size: 18px;">Number of Full Years: <strong style="color: #FF4500;">{years_diff}</strong></p>
+                    <p style="font-size: 18px;">Number of Remaining Months: <strong style="color: #FF4500;">{rem_months}</strong></p>
                     <p style="font-size: 18px;">Interest for Remaining Months: <strong style="color: #FF4500;">₹{rem_months_interest:.2f}</strong></p>
+                    <p style="font-size: 18px;">Number of Remaining Days: <strong style="color: #FF4500;">{rem_days}</strong></p>
                     <p style="font-size: 18px;">Interest for Remaining Days: <strong style="color: #FF4500;">₹{rem_days_interest:.2f}</strong></p>
                     <p style="font-size: 18px;">Total Interest: <strong style="color: #FF4500;">₹{total_interest:.2f}</strong></p>
                 </div>
