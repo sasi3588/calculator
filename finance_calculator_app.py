@@ -158,6 +158,40 @@ st.markdown("""
         color: #888;
     }
     
+    /* Dark mode styles */
+    @media (prefers-color-scheme: dark) {
+        body {
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+        
+        .card {
+            background-color: #2c2c2c;
+            box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+        }
+        
+        .input-section h3 {
+            color: #f0f0f0;
+        }
+        
+        .result-item {
+            background-color: #3a3a3a;
+        }
+        
+        .result-label {
+            color: #f0f0f0;
+        }
+        
+        .result-value {
+            color: #ff6b6b;
+        }
+        
+        .footer {
+            color: #888;
+            border-top-color: #FFD700;
+        }
+    }
+    
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .main-header {
