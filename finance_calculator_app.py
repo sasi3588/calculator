@@ -34,9 +34,9 @@ def calculate_interest(start_date, end_date, amount, interest_rate):
     # Calculate interest for the remaining months/days
     remaining_months = (end_date.year - remaining_end_date.year) * 12 + end_date.month - remaining_end_date.month
     start_of_last_month = remaining_end_date.replace(day=1, month=end_date.month)
-    remaining_days = (end_date - start_of_last_month).days
+    remaining_days = (end_date - start_of_last_month).days+remaining_months
     
-    if remaining_days >= 30:
+    while remaining_days >= 30:
         remaining_months += 1
         remaining_days -= 30
     
@@ -255,7 +255,7 @@ if calculate_button:
             
             results = [
                 ("Number of Full Years", f"{years_diff}"),
-                ("Interest for Full Years", f"{years_interest:.2f}"),
+                ("Interest for Full Years", f"{years_interest}"),
                 ("Number of Remaining Months", f"{rem_months}"),
                 ("Interest for Remaining Months", f"₹{rem_months_interest:.2f}"),
                 ("Number of Remaining Days", f"{rem_days}"),
