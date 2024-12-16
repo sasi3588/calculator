@@ -8,49 +8,85 @@ def calculate_interest(start_date, end_date, amount, interest_rate):
     months_diff = (end_date.year - start_date.year) * 12 + end_date.month - start_date.month
 
     start_of_last_month = start_date.replace(year=end_date.year, month=end_date.month)
-    remaining_days = (end_date - start_of_last_month).days+months_diff
-    if remaining_days>=30:
-        months_diff+=1
-        remaining_days-=30
-    full_months_interest = round(amount * (interest_rate / 100) * months_diff,2)
-    remaining_days+=1
+    remaining_days = (end_date - start_of_last_month).days + months_diff
+    if remaining_days >= 30:
+        months_diff += 1
+        remaining_days -= 30
+    full_months_interest = round(amount * (interest_rate / 100) * months_diff, 2)
+    remaining_days += 1
     amount_per_month = amount * (interest_rate / 100)
-    partial_month_interest =round( amount_per_month * (remaining_days / 30),2)
+    partial_month_interest = round(amount_per_month * (remaining_days / 30), 2)
 
     total_interest = round(full_months_interest + partial_month_interest, 2)
-    
-    return months_diff, full_months_interest, remaining_days,partial_month_interest ,total_interest
 
-# Streamlit App
+    return months_diff, full_months_interest, remaining_days, partial_month_interest, total_interest
+
+
+# Initialize session state for theme
+if "dark_mode" not in st.session_state:
+    st.session_state["dark_mode"] = False
+
+# Theme toggle button
+if st.sidebar.button("Toggle Dark Mode"):
+    st.session_state["dark_mode"] = not st.session_state["dark_mode"]
+
+# Apply dynamic theme
+if st.session_state["dark_mode"]:
+    background_color = "#121212"
+    text_color = "#FFFFFF"
+    result_color = "#FFD700"
+    input_bg_color = "#333333"
+    input_text_color = "#FFFFFF"
+else:
+    background_color = "#FFF8DC"
+    text_color = "#333333"
+    result_color = "#FF4500"
+    input_bg_color = "#FFFFFF"
+    input_text_color = "#000000"
+
+# Streamlit App Configuration
 st.set_page_config(page_title="Finance Calculator", page_icon="\U0001F4B0", layout="centered")
 
-# Header Section
+# Apply styling dynamically
 st.markdown(
-    """
+    f"""
     <style>
-        .main-header {
+        .main-header {{
             font-size: 35px;
             font-weight: bold;
             text-align: center;
-            color: #FFD700;
+            color: {result_color};
             font-family: 'Arial', sans-serif;
             margin-top: 10px;
-        }
-        .sub-header {
+        }}
+        .sub-header {{
             font-size: 18px;
             text-align: center;
-            color: #555;
+            color: {text_color};
             margin-bottom: 20px;
-        }
-        .stApp {
-            background-color: #FFF8DC;
-        }
-        input {
-            border: 1px solid #FFD700;
+        }}
+        .stApp {{
+            background-color: {background_color};
+            color: {text_color};
+        }}
+        input {{
+            border: 1px solid {result_color};
             padding: 10px;
             border-radius: 5px;
             width: 100%;
-        }
+            background-color: {input_bg_color};
+            color: {input_text_color};
+        }}
+        h2 {{
+            color: {result_color};
+        }}
+        strong {{
+            color: {result_color};
+        }}
+        p {{
+            font-size: 18px;
+            color: {text_color};
+        }}
     </style>
     <div class="main-header">Finance Calculator</div>
     <div class="sub-header">Calculate your gold business interest with ease</div>
@@ -60,7 +96,6 @@ st.markdown(
 
 # Input Section
 st.markdown("### Enter Details")
-
 start_date = st.text_input("Start Date (dd/mm/YYYY)", value="01/01/2024")
 end_date = st.text_input("End Date (dd/mm/YYYY)", value="31/12/2024")
 amount = st.number_input("Principal Amount (₹)", value=20000, min_value=0, step=1000)
@@ -72,7 +107,7 @@ if st.button("Calculate Interest"):
         if datetime.strptime(start_date, "%d/%m/%Y") >= datetime.strptime(end_date, "%d/%m/%Y"):
             st.error("Start Date must be before End Date.")
         else:
-            months_diff, full_months_interest, remaining_days, partial_month_interest,total_interest = calculate_interest(
+            months_diff, full_months_interest, remaining_days, partial_month_interest, total_interest = calculate_interest(
                 start_date, 
                 end_date, 
                 amount, 
@@ -82,12 +117,12 @@ if st.button("Calculate Interest"):
             st.markdown(
                 f"""
                 <div style="text-align: center; margin-top: 20px;">
-                    <h2 style="color: #008000;">Calculation Results</h2>
-                    <p style="font-size: 18px;">Number of Months: <strong style="color: #FF4500;">{months_diff}</strong></p>
-                    <p style="font-size: 18px;">Interest for Full Months: <strong style="color: #FF4500;">₹{full_months_interest:.2f}</strong></p>
-                    <p style="font-size: 18px;">Remaining Days: <strong style="color: #FF4500;">{remaining_days}</strong></p>
-                    <p style="font-size: 18px;">Remaining Days Interest : <strong style="color: #FF4500;">{partial_month_interest}</strong></p>
-                    <p style="font-size: 18px;">Total Interest: <strong style="color: #FF4500;">₹{total_interest}</strong></p>
+                    <h2>Calculation Results</h2>
+                    <p>Number of Months: <strong>{months_diff}</strong></p>
+                    <p>Interest for Full Months: <strong>₹{full_months_interest:.2f}</strong></p>
+                    <p>Remaining Days: <strong>{remaining_days}</strong></p>
+                    <p>Remaining Days Interest: <strong>₹{partial_month_interest}</strong></p>
+                    <p>Total Interest: <strong>₹{total_interest}</strong></p>
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -97,9 +132,9 @@ if st.button("Calculate Interest"):
 
 # Footer
 st.markdown(
-    """
-    <hr style="border: 1px solid #FFD700;">
-    <p style="text-align: center; font-size: 14px; color: #888;">&copy; 2024 Gold Business Finance Calculator</p>
+    f"""
+    <hr style="border: 1px solid {result_color};">
+    <p style="text-align: center; font-size: 14px; color: {text_color};">&copy; 2024 Gold Business Finance Calculator</p>
     """,
     unsafe_allow_html=True
 )
