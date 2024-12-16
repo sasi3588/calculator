@@ -1,7 +1,7 @@
 import streamlit as st
-from datetime import datetime, timedelta  # Include timedelta
+from datetime import datetime, timedelta
 
-# Function to calculate interest
+# Function to calculate interest (unchanged)
 def calculate_interest(start_date, end_date, amount, interest_rate):
     # Parse the input dates
     start_date = datetime.strptime(start_date, "%d/%m/%Y")
@@ -50,63 +50,158 @@ def calculate_interest(start_date, end_date, amount, interest_rate):
     return years_diff, total_interest, remaining_months, remaining_days, remaining_months_interest, remaining_days_interest
 
 # Streamlit App Configuration
-st.set_page_config(page_title="Finance Calculator", page_icon="\U0001F4B0", layout="centered")
+st.set_page_config(page_title="Finance Calculator", page_icon="💰", layout="wide")
 
-# App Styling
-st.markdown(
-    """
-    <style>
+# Custom CSS
+st.markdown("""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: #333;
+        background-color: #f0f2f5;
+    }
+    
+    .stApp {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+    
+    .main-header {
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        color: #FFD700;
+        margin: 2rem 0 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .sub-header {
+        font-size: 1.2rem;
+        text-align: center;
+        color: #555;
+        margin-bottom: 2rem;
+    }
+    
+    .card {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .input-section h3 {
+        color: #2c3e50;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stTextInput > div > div > input {
+        border-radius: 10px;
+    }
+    
+    .stNumberInput > div > div > input {
+        border-radius: 10px;
+    }
+    
+    .stButton > button {
+        background-color: #FFD700;
+        color: #333;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    
+    .stButton > button:hover {
+        background-color: #FFC300;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .results-section h2 {
+        color: #2ecc71;
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .result-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        padding: 0.5rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+    
+    .result-label {
+        font-weight: 500;
+    }
+    
+    .result-value {
+        font-weight: 600;
+        color: #e74c3c;
+    }
+    
+    .footer {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #FFD700;
+        font-size: 0.9rem;
+        color: #888;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
         .main-header {
-            font-size: 35px;
-            font-weight: bold;
-            text-align: center;
-            color: #FFD700;
-            font-family: 'Arial', sans-serif;
-            margin-top: 10px;
+            font-size: 2rem;
         }
+        
         .sub-header {
-            font-size: 18px;
-            text-align: center;
-            color: #555;
-            margin-bottom: 20px;
+            font-size: 1rem;
         }
-        .light-mode {
-            background-color: #FFF8DC;
-            color: #000;
+        
+        .card {
+            padding: 1.5rem;
         }
-        .dark-mode {
-            background-color: #2C2C2C;
-            color: #FFF;
+        
+        .stButton > button {
+            padding: 0.6rem 1.5rem;
         }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+    }
+</style>
+""", unsafe_allow_html=True)
 
-# Mode Toggle
-mode = st.radio("Select Mode", ["Light", "Dark"], horizontal=True)
-mode_class = "light-mode" if mode == "Light" else "dark-mode"
-
-# Header
-st.markdown(
-    f"""
-    <div class="{mode_class}">
-        <div class="main-header">Finance Calculator</div>
-        <div class="sub-header">Calculate your gold business interest with ease</div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# App Header
+st.markdown('<h1 class="main-header">Finance Calculator</h1>', unsafe_allow_html=True)
+st.markdown('<p class="sub-header">Calculate your gold business interest with ease</p>', unsafe_allow_html=True)
 
 # Input Section
-st.markdown("### Enter Details")
-start_date = st.text_input("Start Date (dd/mm/YYYY)", value="01/01/2024")
-end_date = st.text_input("End Date (dd/mm/YYYY)", value="31/12/2024")
-amount = st.number_input("Principal Amount (₹)", value=20000, min_value=0, step=1000)
-interest_rate = st.number_input("Monthly Interest Rate (%)", value=1.75, min_value=0.0, step=0.01)
+st.markdown('<div class="card input-section">', unsafe_allow_html=True)
+st.markdown('### Enter Details')
 
-# Calculate Button
-if st.button("Calculate Interest"):
+col1, col2 = st.columns(2)
+with col1:
+    start_date = st.text_input("Start Date (dd/mm/YYYY)", value="01/01/2024", key="start_date")
+with col2:
+    end_date = st.text_input("End Date (dd/mm/YYYY)", value="31/12/2024", key="end_date")
+
+amount = st.number_input("Principal Amount (₹)", value=20000, min_value=0, step=1000, key="amount")
+interest_rate = st.number_input("Monthly Interest Rate (%)", value=1.75, min_value=0.0, step=0.01, key="interest_rate")
+
+calculate_button = st.button("Calculate Interest", key="calculate_button")
+
+st.markdown('</div>', unsafe_allow_html=True)
+
+# Calculate and Display Results
+if calculate_button:
     try:
         if datetime.strptime(start_date, "%d/%m/%Y") >= datetime.strptime(end_date, "%d/%m/%Y"):
             st.error("Start Date must be before End Date.")
@@ -117,33 +212,27 @@ if st.button("Calculate Interest"):
                 amount, 
                 interest_rate
             )
+            
             # Display results
-            st.markdown(
-                f"""
-                <div style="text-align: center; margin-top: 20px; color: {'#FFF' if mode == 'Dark' else '#000'};">
-                    <h2 style="color: #008000;">Calculation Results</h2>
-                    <p style="font-size: 18px;">Number of Full Years: <strong style="color: #FF4500;">{years_diff}</strong></p>
-                    <p style="font-size: 18px;">Number of Remaining Months: <strong style="color: #FF4500;">{rem_months}</strong></p>
-                    <p style="font-size: 18px;">Interest for Remaining Months: <strong style="color: #FF4500;">₹{rem_months_interest:.2f}</strong></p>
-                    <p style="font-size: 18px;">Number of Remaining Days: <strong style="color: #FF4500;">{rem_days}</strong></p>
-                    <p style="font-size: 18px;">Interest for Remaining Days: <strong style="color: #FF4500;">₹{rem_days_interest:.2f}</strong></p>
-                    <p style="font-size: 18px;">Total Interest: <strong style="color: #FF4500;">₹{total_interest:.2f}</strong></p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            st.markdown('<div class="card results-section">', unsafe_allow_html=True)
+            st.markdown('<h2>Calculation Results</h2>', unsafe_allow_html=True)
+            
+            results = [
+                ("Number of Full Years", f"{years_diff}"),
+                ("Number of Remaining Months", f"{rem_months}"),
+                ("Interest for Remaining Months", f"₹{rem_months_interest:.2f}"),
+                ("Number of Remaining Days", f"{rem_days}"),
+                ("Interest for Remaining Days", f"₹{rem_days_interest:.2f}"),
+                ("Total Interest", f"₹{total_interest:.2f}")
+            ]
+            
+            for label, value in results:
+                st.markdown(f'<div class="result-item"><span class="result-label">{label}:</span> <span class="result-value">{value}</span></div>', unsafe_allow_html=True)
+            
+            st.markdown('</div>', unsafe_allow_html=True)
     except ValueError:
         st.error("Please enter dates in the correct format: dd/mm/YYYY.")
 
 # Footer
-st.markdown(
-    f"""
-    <div class="{mode_class}">
-        <hr style="border: 1px solid #FFD700;">
-        <p style="text-align: center; font-size: 14px; color: {'#CCC' if mode == 'Dark' else '#888'};">
-            &copy; 2024 Gold Business Finance Calculator
-        </p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+st.markdown('<div class="footer">&copy; 2024 Gold Business Finance Calculator</div>', unsafe_allow_html=True)
+
