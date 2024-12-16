@@ -1,5 +1,5 @@
 import streamlit as st
-from datetime import datetime
+from datetime import datetime, timedelta  # Include timedelta
 
 # Function to calculate interest
 def calculate_interest(start_date, end_date, amount, interest_rate):
@@ -111,7 +111,7 @@ if st.button("Calculate Interest"):
         if datetime.strptime(start_date, "%d/%m/%Y") >= datetime.strptime(end_date, "%d/%m/%Y"):
             st.error("Start Date must be before End Date.")
         else:
-            months_diff, full_months_interest, remaining_days, partial_month_interest, total_interest = calculate_interest(
+            years_diff, total_interest, rem_months, rem_days, rem_months_interest, rem_days_interest = calculate_interest(
                 start_date, 
                 end_date, 
                 amount, 
@@ -122,11 +122,10 @@ if st.button("Calculate Interest"):
                 f"""
                 <div style="text-align: center; margin-top: 20px; color: {'#FFF' if mode == 'Dark' else '#000'};">
                     <h2 style="color: #008000;">Calculation Results</h2>
-                    <p style="font-size: 18px;">Number of Months: <strong style="color: #FF4500;">{months_diff}</strong></p>
-                    <p style="font-size: 18px;">Interest for Full Months: <strong style="color: #FF4500;">₹{full_months_interest:.2f}</strong></p>
-                    <p style="font-size: 18px;">Remaining Days: <strong style="color: #FF4500;">{remaining_days}</strong></p>
-                    <p style="font-size: 18px;">Remaining Days Interest: <strong style="color: #FF4500;">₹{partial_month_interest}</strong></p>
-                    <p style="font-size: 18px;">Total Interest: <strong style="color: #FF4500;">₹{total_interest}</strong></p>
+                    <p style="font-size: 18px;">Number of Full Years: <strong style="color: #FF4500;">{years_diff}</strong></p>
+                    <p style="font-size: 18px;">Interest for Remaining Months: <strong style="color: #FF4500;">₹{rem_months_interest:.2f}</strong></p>
+                    <p style="font-size: 18px;">Interest for Remaining Days: <strong style="color: #FF4500;">₹{rem_days_interest:.2f}</strong></p>
+                    <p style="font-size: 18px;">Total Interest: <strong style="color: #FF4500;">₹{total_interest:.2f}</strong></p>
                 </div>
                 """,
                 unsafe_allow_html=True
