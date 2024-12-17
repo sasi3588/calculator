@@ -2,7 +2,6 @@
 import streamlit as st
 from datetime import datetime, timedelta
 
-# Function to calculate interest (unchanged)
 def calculate_interest(start_date, end_date, amount, interest_rate):
     # Parse the input dates
     start_date = datetime.strptime(start_date, "%d/%m/%Y")
@@ -14,11 +13,30 @@ def calculate_interest(start_date, end_date, amount, interest_rate):
     # Calculate the total number of full years and the remaining period
     years_diff = end_date.year - start_date.year
     remaining_end_date = start_date.replace(year=start_date.year + years_diff)
-
+    
+    months_diff = (end_date.year - remaining_end_date.year) * 12 + (end_date.month - remaining_end_date.month)
+    
+    # Adjust if the day of the end date is earlier than the start date
+    if end_date.day < remaining_end_date.day:
+        months_diff -= 1
+        # Calculate remaining days in the previous month
+        prev_month_end_date = end_date.replace(day=1) - timedelta(days=1)
+        days_diff = (prev_month_end_date.day - remaining_end_date.day) + end_date.day
+    else:
+        days_diff = end_date.day - remaining_end_date.day
+    remaining_months=months_diff
+    remaining_days = days_diff+remaining_months+(12*years_diff)+1
+    print("before modifying :",years_diff,remaining_end_date,remaining_months,remaining_days)
     # If the remaining_end_date exceeds the end_date, adjust the years_diff and remaining period
     if remaining_end_date > end_date:
         years_diff -= 1
         remaining_end_date = start_date.replace(year=start_date.year + years_diff)
+    while remaining_days >= 30:
+        remaining_months += 1
+        remaining_days -= 30
+    while remaining_months>=12:
+        remaining_months-=12
+        years_diff+=1
     
     # Calculate interest for each full year with compounding
     for year in range(years_diff):
@@ -29,17 +47,8 @@ def calculate_interest(start_date, end_date, amount, interest_rate):
         yearly_interest = principal * (interest_rate / 100) * 12  # 12 months
         total_interest += yearly_interest
         principal += yearly_interest  # Compound the interest into the principal
-	
-    years_interest=total_interest
-    # Calculate interest for the remaining months/days
-    remaining_months = (end_date.year - remaining_end_date.year) * 12 + end_date.month - remaining_end_date.month
-    start_of_last_month = remaining_end_date.replace(day=1, month=end_date.month)
-    remaining_days = (end_date - start_of_last_month).days+remaining_months
-    
-    while remaining_days >= 30:
-        remaining_months += 1
-        remaining_days -= 30
-    
+        
+    years_interest=total_interest    
     # Calculate interest for full remaining months
     remaining_months_interest = principal * (interest_rate / 100) * remaining_months
     total_interest += remaining_months_interest
@@ -255,7 +264,7 @@ if calculate_button:
             
             results = [
                 ("Number of Full Years", f"{years_diff}"),
-                ("Interest for Full Years", f"{years_interest:.2f}"),
+                ("Interest for Full Years", f"{years_interest}"),
                 ("Number of Remaining Months", f"{rem_months}"),
                 ("Interest for Remaining Months", f"₹{rem_months_interest:.2f}"),
                 ("Number of Remaining Days", f"{rem_days}"),
